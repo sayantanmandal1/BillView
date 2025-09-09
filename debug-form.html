@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Form Data</title>
+</head>
+<body>
+    <h1>Debug Form Data</h1>
+    <p>Check the console for form data updates</p>
+    
+    <script>
+        // Simulate the data structure from API
+        const apiResponse = {
+            vendor: {
+                name: 'Sample Vendor Address',
+                address: 'Vendor AddressSample Vendor Address',
+                taxId: '123456789'
+            },
+            invoice: {
+                number: 'INV-001',
+                date: '2025-01-01',
+                currency: 'USD',
+                subtotal: 36,
+                taxPercent: 0,
+                total: 36,
+                poNumber: 'PO-001',
+                poDate: '2025-01-01',
+                lineItems: [
+                    {
+                        description: 'Sample Item A',
+                        unitPrice: 21,
+                        quantity: 1,
+                        total: 21
+                    },
+                    {
+                        description: 'Sample Item B',
+                        unitPrice: 15,
+                        quantity: 1,
+                        total: 15
+                    }
+                ]
+            }
+        };
+        
+        console.log('API Response:', apiResponse);
+        console.log('Vendor Name:', apiResponse.vendor.name);
+        console.log('Invoice Number:', apiResponse.invoice.number);
+        console.log('Invoice Date:', apiResponse.invoice.date);
+        console.log('Line Items:', apiResponse.invoice.lineItems);
+        
+        // Test date formatting
+        const dateInput = document.createElement('input');
+        dateInput.type = 'date';
+        dateInput.value = apiResponse.invoice.date;
+        document.body.appendChild(dateInput);
+        console.log('Date input value:', dateInput.value);
+    </script>
+</body>
+</html>

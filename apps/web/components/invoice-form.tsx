@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,40 +17,74 @@ interface InvoiceFormProps {
   extracting?: boolean;
 }
 
-export function InvoiceForm({ 
-  data, 
-  onSave, 
-  onExtract, 
-  onDelete, 
-  loading = false, 
-  extracting = false 
+export function InvoiceForm({
+  data,
+  onSave,
+  onExtract,
+  onDelete,
+  loading = false,
+  extracting = false
 }: InvoiceFormProps) {
-  const [formData, setFormData] = useState<Partial<InvoiceRecord>>(
-    data || {
-      vendor: { name: '', address: '', taxId: '' },
-      invoice: {
-        number: '',
-        date: '',
-        currency: 'USD',
-        subtotal: 0,
-        taxPercent: 0,
-        total: 0,
-        poNumber: '',
-        poDate: '',
-        lineItems: []
-      }
+  const [formData, setFormData] = useState<Partial<InvoiceRecord>>({
+    vendor: { name: '', address: '', taxId: '' },
+    invoice: {
+      number: '',
+      date: '',
+      currency: 'USD',
+      subtotal: 0,
+      taxPercent: 0,
+      total: 0,
+      poNumber: '',
+      poDate: '',
+      lineItems: []
     }
-  );
+  });
+
+  // Update form data when new data is received
+  useEffect(() => {
+    if (data) {
+      console.log('📝 Updating form with new data:', data);
+
+      const newFormData = {
+        fileId: data.fileId,
+        fileName: data.fileName,
+        vendor: {
+          name: data.vendor?.name || '',
+          address: data.vendor?.address || '',
+          taxId: data.vendor?.taxId || '',
+        },
+        invoice: {
+          number: data.invoice?.number || '',
+          date: data.invoice?.date || '',
+          currency: data.invoice?.currency || 'USD',
+          subtotal: Number(data.invoice?.subtotal) || 0,
+          taxPercent: Number(data.invoice?.taxPercent) || 0,
+          total: Number(data.invoice?.total) || 0,
+          poNumber: data.invoice?.poNumber || '',
+          poDate: data.invoice?.poDate || '',
+          lineItems: data.invoice?.lineItems?.map(item => ({
+            description: item.description || '',
+            unitPrice: Number(item.unitPrice) || 0,
+            quantity: Number(item.quantity) || 1,
+            total: Number(item.total) || 0,
+          })) || [],
+        }
+      };
+
+      console.log('📝 Setting form data to:', newFormData);
+      setFormData(newFormData);
+    }
+  }, [data]);
 
   const updateVendor = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
-      vendor: { 
+      vendor: {
         name: prev.vendor?.name || '',
         address: prev.vendor?.address || '',
         taxId: prev.vendor?.taxId || '',
-        ...prev.vendor, 
-        [field]: value 
+        ...prev.vendor,
+        [field]: value
       }
     }));
   };
@@ -58,12 +92,12 @@ export function InvoiceForm({
   const updateInvoice = (field: string, value: string | number) => {
     setFormData(prev => ({
       ...prev,
-      invoice: { 
+      invoice: {
         number: prev.invoice?.number || '',
         date: prev.invoice?.date || '',
         lineItems: prev.invoice?.lineItems || [],
-        ...prev.invoice, 
-        [field]: value 
+        ...prev.invoice,
+        [field]: value
       }
     }));
   };
@@ -72,13 +106,13 @@ export function InvoiceForm({
     setFormData(prev => {
       const lineItems = [...(prev.invoice?.lineItems || [])];
       const currentItem = lineItems[index] || { description: '', unitPrice: 0, quantity: 1, total: 0 };
-      lineItems[index] = { 
-        ...currentItem, 
-        [field]: value 
+      lineItems[index] = {
+        ...currentItem,
+        [field]: value
       };
       return {
         ...prev,
-        invoice: { 
+        invoice: {
           number: prev.invoice?.number || '',
           date: prev.invoice?.date || '',
           lineItems: lineItems,
@@ -120,10 +154,8 @@ export function InvoiceForm({
   };
 
   const handleExtract = async (model: 'gemini' | 'groq') => {
-    const extracted = await onExtract(model);
-    if (extracted) {
-      setFormData(prev => ({ ...prev, ...extracted }));
-    }
+    await onExtract(model);
+    // Form data will be updated via useEffect when parent component updates the data prop
   };
 
   return (
@@ -143,6 +175,17 @@ export function InvoiceForm({
           {extracting && <Loader2 className="h-4 w-4 animate-spin mt-2" />}
         </div>
       </div>
+
+      {/* Debug Info - Remove in production */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="bg-gray-100 p-4 rounded text-xs">
+          <strong>Debug Info:</strong>
+          <br />Vendor Name: {formData.vendor?.name || 'empty'}
+          <br />Invoice Number: {formData.invoice?.number || 'empty'}
+          <br />Invoice Date: {formData.invoice?.date || 'empty'}
+          <br />Line Items: {formData.invoice?.lineItems?.length || 0}
+        </div>
+      )}
 
       {/* Vendor Information */}
       <div className="space-y-4">
@@ -272,7 +315,7 @@ export function InvoiceForm({
             Add Item
           </Button>
         </div>
-        
+
         {formData.invoice?.lineItems?.map((item, index) => (
           <div key={index} className="grid grid-cols-5 gap-2 items-end">
             <div>
