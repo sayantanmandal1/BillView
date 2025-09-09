@@ -62,7 +62,23 @@ const ExtractRequestSchema = z.object({
 const app = express();
 const port = process.env.PORT || 3001;
 
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  credentials: false,
+  preflightContinue: false,
+  optionsSuccessStatus: 200
+}));
+
+// Handle preflight requests
+app.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.sendStatus(200);
+});
+
 app.use(express.json());
 
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/pdf-dashboard';
@@ -86,7 +102,9 @@ const upload = multer({
 // ----------------- DB connect -----------------
 async function connectDB() {
   try {
-    const client = new MongoClient(mongoUri);
+    const client = new MongoClient(mongoUri, {
+      serverApi: { version: '1', strict: true, deprecationErrors: true }
+    });    
     await client.connect();
     db = client.db();
     bucket = new GridFSBucket(db, { bucketName: 'pdfs' });

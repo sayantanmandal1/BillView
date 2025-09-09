@@ -8,7 +8,7 @@ import { ArrowLeft, Edit } from 'lucide-react';
 import Link from 'next/link';
 import type { InvoiceRecord } from '@/lib/types';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API_BASE = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001').replace(/\/$/, '');
 
 export default function InvoiceDetailPage() {
   const params = useParams();

@@ -9,7 +9,7 @@ import { Upload, FileText } from 'lucide-react';
 import Link from 'next/link';
 import type { InvoiceRecord } from '@/lib/types';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API_BASE = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001').replace(/\/$/, '');
 
 export default function Home() {
   const [currentFile, setCurrentFile] = useState<{ id: string; name: string } | null>(null);
