@@ -127,6 +127,7 @@ npm run build
   }
   ```
 
+  
 ### Invoice CRUD
 - `GET /invoices` - List invoices (supports `?q=search` query)
 - `GET /invoices/:id` - Get single invoice
