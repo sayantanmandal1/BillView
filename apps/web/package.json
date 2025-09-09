@@ -1,0 +1,40 @@
+{
+    "name": "web",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "npm run copy-pdf-worker && next dev",
+        "build": "npm run copy-pdf-worker && next build",
+        "start": "next start",
+        "lint": "next lint",
+        "copy-pdf-worker": "node -e \"const fs = require('fs'); const path = require('path'); if (!fs.existsSync('public')) fs.mkdirSync('public'); fs.copyFileSync(path.join('..', '..', 'node_modules', 'pdfjs-dist', 'build', 'pdf.worker.min.mjs'), path.join('public', 'pdf.worker.min.mjs'));\""
+    },
+    "dependencies": {
+        "next": "14.2.32",
+        "react": "^18.0.0",
+        "react-dom": "^18.0.0",
+        "@radix-ui/react-slot": "^1.0.2",
+        "@radix-ui/react-dialog": "^1.0.5",
+        "@radix-ui/react-label": "^2.0.2",
+        "@radix-ui/react-select": "^2.0.0",
+        "@radix-ui/react-toast": "^1.1.5",
+        "class-variance-authority": "^0.7.0",
+        "clsx": "^2.0.0",
+        "lucide-react": "^0.294.0",
+        "pdfjs-dist": "^4.8.69",
+        "tailwind-merge": "^2.0.0",
+        "tailwindcss-animate": "^1.0.7",
+        "zod": "^3.22.4"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "@types/react": "^18.0.0",
+        "@types/react-dom": "^18.0.0",
+        "autoprefixer": "^10.0.0",
+        "eslint": "^8.0.0",
+        "eslint-config-next": "14.0.0",
+        "postcss": "^8.0.0",
+        "tailwindcss": "^3.3.0",
+        "typescript": "^5.0.0"
+    }
+}

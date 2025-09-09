@@ -1,0 +1,25 @@
+{
+  "name": "pdf-review-dashboard",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "dev": "npm run dev --workspaces",
+    "lint": "npm run lint --workspaces",
+    "clean": "npm run clean --workspaces"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "blob-polyfill": "^9.0.20240710",
+    "form-data": "^4.0.4",
+    "node-fetch": "^3.3.2",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "pdf-lib": "^1.17.1",
+    "tesseract.js": "^6.0.1"
+  }
+}

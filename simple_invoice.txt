@@ -1,0 +1,16 @@
+Sample Invoice
+
+Invoice Number: INV-001
+Date: 01-01-2025
+Currency: USD
+Tax %: 0.00
+Subtotal: 100.00
+Total: 100.00
+PO Number: PO-001
+
+Vendor Information:
+Sample Vendor Address
+Tax ID: 123456789
+
+Line Items:
+1. Consulting Services - Qty: 5, Unit Price: $20.00, Total: $100.00
